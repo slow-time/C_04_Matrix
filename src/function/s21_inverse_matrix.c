@@ -13,15 +13,15 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
     } else {
       s21_create_matrix(A->rows, A->columns, result);
       result_code = calc_minor(A, result);
-      cofactor(result, &result_code);
+      cofactor(result);
       matrix_t tmp;
       copy_matrix(*result, &tmp);
       s21_remove_matrix(result);
       s21_transpose(&tmp, result);
       s21_remove_matrix(&tmp);
       if (result_code == CORRECT_CALCULATION) {
-        double minus_one = -1;
-        result_code = s21_mult_number(result, minus_one, &tmp);
+        double for_mult = 1 / determinant;
+        result_code = s21_mult_number(result, for_mult, &tmp);
         s21_remove_matrix(result);
         copy_matrix(tmp, result);
         s21_remove_matrix(&tmp);

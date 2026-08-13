@@ -10,7 +10,7 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
     result_code = calc_minor(A, result);
 
     if (result_code == CORRECT_CALCULATION) {
-      cofactor(result, &result_code);
+      cofactor(result);
     }
     if (result_code != CORRECT_CALCULATION) {
       s21_remove_matrix(result);
@@ -64,14 +64,11 @@ void copy_matrix(matrix_t A, matrix_t *B) {
   }
 }
 
-void cofactor(matrix_t *result, int *result_code) {
+void cofactor(matrix_t *result) {
   double tmp = -1;
   for (int i = 0; i < result->rows; i++) {
     for (int j = 0; j < result->columns; j++) {
       result->matrix[i][j] *= pow(tmp, i + j + 2);
-      if (!isfinite(result->matrix[i][j])) {
-        *result_code = COMPUTATION_ERROR;
-      }
     }
   }
 }

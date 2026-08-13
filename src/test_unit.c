@@ -886,6 +886,47 @@ START_TEST(test_determinant_8) {
 }
 END_TEST
 
+START_TEST(test_determinant_9) {
+  matrix_t A;
+  double result;
+  double t = -1704;
+  s21_create_matrix(4, 4, &A);
+  double for_matrix_A[] = {45, 4, 0, 0, 3, -4, 2, 1, 87, 7, 3, 0, 0, -7, 3, 5};
+  initializing_matrix(&A, for_matrix_A);
+  ck_assert_int_eq(s21_determinant(&A, &result), CORRECT_CALCULATION);
+  ck_assert_double_eq_tol(result, t, 1e-7);
+  s21_remove_matrix(&A);
+}
+END_TEST
+
+START_TEST(test_determinant_10) {
+  matrix_t A;
+  double result;
+  double t = -4511.67002;
+  s21_create_matrix(6, 6, &A);
+  double for_matrix_A[] = {9,   4,   2.9, 0, 0, 0, 3, -4, 2,   1,    -3.5, 2,
+                           1.4, 7.7, 3,   0, 0, 0, 0, -7, 3,   5,    1.1,  5.7,
+                           8,   4,   0,   2, 0, 2, 1, 2,  -37, 3.83, 3.5,  0};
+  initializing_matrix(&A, for_matrix_A);
+  ck_assert_int_eq(s21_determinant(&A, &result), CORRECT_CALCULATION);
+  ck_assert_double_eq_tol(result, t, 1e-7);
+  s21_remove_matrix(&A);
+}
+END_TEST
+
+START_TEST(test_determinant_11) {
+  matrix_t A;
+  double result;
+  double t = 9;
+  s21_create_matrix(1, 1, &A);
+  double for_matrix_A[] = {9};
+  initializing_matrix(&A, for_matrix_A);
+  ck_assert_int_eq(s21_determinant(&A, &result), CORRECT_CALCULATION);
+  ck_assert_double_eq_tol(result, t, 1e-7);
+  s21_remove_matrix(&A);
+}
+END_TEST
+
 START_TEST(test_calc_comp_1) {
   matrix_t A;
   matrix_t result;
@@ -1030,6 +1071,32 @@ START_TEST(test_inverse_6) {
 }
 END_TEST
 
+START_TEST(test_inverse_7) {
+  matrix_t A;
+  matrix_t result;
+  matrix_t true_result;
+  s21_create_matrix(3, 3, &A);
+  s21_create_matrix(3, 3, &true_result);
+  double for_matrix_A[] = {2, 0, -1, 1, 5, -4, -1, 1, 0};
+  double for_matrix_true_result[] = {2, -0.5, 2.5, 2, -0.5, 3.5, 3, -1, 5};
+  initializing_matrix(&A, for_matrix_A);
+  initializing_matrix(&true_result, for_matrix_true_result);
+  ck_assert_int_eq(s21_inverse_matrix(&A, &result), CORRECT_CALCULATION);
+  ck_assert_double_eq(result.matrix[0][0], true_result.matrix[0][0]);
+  ck_assert_double_eq(result.matrix[0][1], true_result.matrix[0][1]);
+  ck_assert_double_eq(result.matrix[0][2], true_result.matrix[0][2]);
+  ck_assert_double_eq(result.matrix[1][0], true_result.matrix[1][0]);
+  ck_assert_double_eq(result.matrix[1][1], true_result.matrix[1][1]);
+  ck_assert_double_eq(result.matrix[1][2], true_result.matrix[1][2]);
+  ck_assert_double_eq(result.matrix[2][0], true_result.matrix[2][0]);
+  ck_assert_double_eq(result.matrix[2][1], true_result.matrix[2][1]);
+  ck_assert_double_eq(result.matrix[2][2], true_result.matrix[2][2]);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&result);
+  s21_remove_matrix(&true_result);
+}
+END_TEST
+
 int main(void) {
   Suite *s = suite_create("Core");
   TCase *tc = tcase_create("Core");
@@ -1104,6 +1171,9 @@ int main(void) {
   tcase_add_test(tc, test_determinant_6);
   tcase_add_test(tc, test_determinant_7);
   tcase_add_test(tc, test_determinant_8);
+  tcase_add_test(tc, test_determinant_9);
+  tcase_add_test(tc, test_determinant_10);
+  tcase_add_test(tc, test_determinant_11);
   tcase_add_test(tc, test_calc_comp_1);
   tcase_add_test(tc, test_calc_comp_2);
   tcase_add_test(tc, test_calc_comp_3);
@@ -1116,6 +1186,7 @@ int main(void) {
   tcase_add_test(tc, test_inverse_4);
   tcase_add_test(tc, test_inverse_5);
   tcase_add_test(tc, test_inverse_6);
+  tcase_add_test(tc, test_inverse_7);
 
   srunner_set_fork_status(sr, CK_NOFORK);
   srunner_run_all(sr, CK_ENV);
